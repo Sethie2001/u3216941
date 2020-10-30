@@ -1,7 +1,8 @@
 
+
 class bookCover {
 
-    /* this class returns the bookcover for an isbn number in correct html using the openlibrary api*/
+    /* this class will show the book covers of the given ISBN on the HTML- the data or information are downloaded from openlibrary api*/
 
     constructor(isbn, size = 'S', key = 'isbn') {
         this.isbn = isbn;
@@ -11,14 +12,14 @@ class bookCover {
         this.url_a = '<img src="http://covers.openlibrary.org/b/'
         this.url_b = '.jpg" />'
     }
-
+    //  size of the book covers
     size(val = "S") {
         this.size = '-' + val;
     }
 
     display() {
 
-        // return the correct html for this book cover
+        // display the correct HTML of books covers
         return this.url_a + this.key + this.isbn + this.size + this.url_b;
         
     }
@@ -28,7 +29,7 @@ class bookCover {
 
 class bookDetail {
 
-    /* this class returns the book details for an isbn number in correct html using the openlibrary api*/
+    /* this class will show the book details of the given ISBN on the HTML - the data or information are from Open library bibkeys*/
 
     constructor(isbn, size = 'S', key = 'isbn') {
         this.isbn = isbn;
@@ -40,42 +41,46 @@ class bookDetail {
         /* 'https://openlibrary.org/api/books?bibkeys=ISBN:0201558025&format=json' */
         this.detail = "";
     }
-
-    size(val = "S") {
+    // size of the book
+    size(val = "L") {
         this.bc.size(val);
     }
-
+    // display the covers
     cover() {
         return this.bc.display();
     }
-    
+    // return book detail after connecting the open library source 
     async getDetail() {
 
         let dets = await getBookDetail(this.url_a, this.key, this.isbn, this.url_b);
         this.detail = dets[this.key + this.isbn];
 
     }
-   gettitle(){
-       return this.detail['title'];
-   }
+    // get authors' name from json object
     getAuthor() {
-        // get the author from the json object
+        
         return this.detail['authors'][0]['name'];
-        }
-    getpublisher(){
-        return this.detail['publishers'][0]['name'];
+        
     }
-    getsubject(){
-        return this.detail['subjects'][0]['name'];
+    // get the number of page from json object
+    getPages(){
+        return this.detail['number_of_pages'];
     }
-   
-    
+    // get the titles of the books from json object
+    getTitle(){
+        return this.detail['title'];
+    }
+    // get the published date of the book from json object 
+    getPublishDate(){
+        return this.detail ['publish_date'];
+    }
 
+    
 }
 
 
 async function getBookDetail(url_a, key, isbn, url_b) {
-    // get the url and put it into the this.detail property
+    // after getting the url, place it into html 
     let url = url_a + key + isbn + url_b;
 
     try {
